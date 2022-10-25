@@ -1,0 +1,68 @@
+<template>
+  <section class="dashboard">
+    <div class="container-fluid">
+      <div class="row mt-4">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+          <ul class="list-group">
+            <li class="list-group-item" v-for="item in files" :key="item._id">
+              <input
+                class="form-check-input me-1"
+                type="checkbox"
+                value=""
+                :id="item._id"
+                v-on:click="addToQueue(item._id)"
+                :checked="checkIfActive(item._id)"
+              />
+              <label class="form-check-label" for="firstCheckbox">
+                {{ item.displayName }}
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<style scoped>
+.list-group-item input {
+  margin-right: 20px !important;
+}
+</style>
+
+<script>
+/* eslint-disable */
+
+import axios from "axios";
+export default {
+  name: "ListView",
+  props: {},
+  data() {
+    return {
+      files: [],
+      queue: [],
+    };
+  },
+  methods: {
+    addToQueue(id) {
+      if (this.queue.includes(id)) {
+        this.queue = this.queue.filter((element) => element !== id);
+      } else {
+        this.queue.push(id);
+      }
+      this.$store.dispatch("updateToAction", this.queue);
+    },
+    checkIfActive(_id) {
+      if (this.$store.state.fileStore.toActionFiles.includes(_id)) {
+        return true;
+      }
+      return false;
+    },
+  },
+  async mounted() {
+    let response = await axios.get("http://localhost:5000/api/upload/");
+    this.files = response.data.data;
+    this.$store.dispatch("updateFiles", this.files);
+  },
+};
+</script>
