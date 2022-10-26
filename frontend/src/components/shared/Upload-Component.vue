@@ -36,6 +36,9 @@
                   Images will directly be uploaded to your account and will be
                   private unitll you share them
                 </p>
+                <b class="text-danger">
+                  You can only upload 10 images at one time
+                </b>
               </div>
               <div class="upload_button">
                 <label class="btn theme" for="upload_file">
@@ -194,6 +197,7 @@ export default {
     },
 
     fileHandler(event) {
+      let num = 0;
       this.links = [];
       this.files = [];
       $("#uploadModal").addClass("show").fadeIn(1000);
@@ -201,6 +205,11 @@ export default {
       const files = event.target.files;
       let fileType = "";
       for (const i of Object.keys(files)) {
+        if (num == 10) {
+          break;
+        } else {
+          num = num + 1;
+        }
         fileType = files[i].type;
         if (this.MIME_TYPE_MAP[fileType]) {
           this.files.push(files[i]);
@@ -250,7 +259,6 @@ export default {
       );
       if (response.status === 200) {
         // console.clear();
-        console.log("Fetching Data");
         response = await axios.get("http://localhost:5000/api/upload/");
         this.$store.dispatch("updateFiles", response.data.data);
         this.closeModal("#previewModal", true);

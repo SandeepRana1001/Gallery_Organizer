@@ -33,37 +33,42 @@ const getData = async (req, res, next) => {
 
 const deleteImage = async (req, res, next) => {
 
-    const { imageTitle, imageId } = req.body
-
-    let imagePath = 'images/gallery/' + imageTitle
-    fs.unlink(imagePath, (err) => {
-        console.clear()
-        console.log(err)
-    })
-
+    console.clear();
+    const files = req.body.files
     let existingImage;
+    console.log(files)
+    let imagePath;
+    files.forEach(async (imageId) => {
+        try {
+            existingImage = await Gallery.findOne({ _id: imageId })
+        } catch (err) {
+            const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
+            return next(error)
+        }
+        if (!existingImage) {
+            const error = new HttpError('Something went wrong. Cannot Remove Item', 500)
+            return next(error)
+        }
+        imagePath = ''
+        imagePath = 'images/gallery/' + existingImage.backend_name
 
-    try {
-        existingImage = await Gallery.findOne({ _id: imageId })
-    } catch (err) {
-        const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
-        return next(error)
-    }
-    if (!existingImage) {
-        const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
-        return next(error)
-    }
+        try {
+            const sess = await mongoose.startSession()
+            sess.startTransaction()
+            await existingImage.remove({ session: sess })
+            await sess.commitTransaction()
 
-    try {
-        const sess = await mongoose.startSession()
-        sess.startTransaction()
-        await existingImage.remove({ session: sess })
-        await sess.commitTransaction()
+        } catch (err) {
+            const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
+            return next(error)
+        }
 
-    } catch (err) {
-        const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
-        return next(error)
-    }
+        fs.unlink(imagePath, (err) => {
+            console.clear()
+            console.log(err)
+        })
+
+    })
 
     return res.status(200).json({ success: 'Removed' })
 }

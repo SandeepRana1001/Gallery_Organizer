@@ -1,9 +1,15 @@
 <template>
   <div id="app">
     <Header />
-    <UIActions @modalTriggered="checkIfModalTriggered" />
+    <UIActions
+      @modalTriggered="checkIfModalTriggered"
+      @typeOfModal="checkTypeOfModal"
+    />
     <DashboardPage v-if="!isModalTriggered" />
     <UploadComponent @closeModal="checkIfModalAreClosed" />
+    <div class="deleteModal" v-if="isDeleteModal">
+      <DeleteComponent @closeModal="checkIfModalAreClosed" />
+    </div>
   </div>
 </template>
 
@@ -27,6 +33,7 @@ import UIActions from "./components/master/UI-Actions.vue";
 import UploadComponent from "./components/shared/Upload-Component.vue";
 import dboard from "./components/dboard.vue";
 import DashboardPage from "./pages/dboard-page.vue";
+import DeleteComponent from "./components/shared/Delete-Component.vue";
 
 export default {
   name: "App",
@@ -36,20 +43,29 @@ export default {
     UIActions,
     UploadComponent,
     DashboardPage,
+    DeleteComponent,
   },
   data() {
     return {
       isModalTriggered: false,
       isModalClose: true,
+      isDeleteModal: false,
     };
   },
   methods: {
     checkIfModalTriggered(childData) {
       this.isModalTriggered = childData;
-      console.log(this.isModalTriggered);
     },
     checkIfModalAreClosed(childData) {
       this.isModalTriggered = !childData;
+      this.isDeleteModal = false;
+    },
+    checkTypeOfModal(childData) {
+      if (childData === "deleteModal") this.isDeleteModal = true;
+
+      setTimeout(() => {
+        $("#deleteModal").addClass("show").fadeIn(1000);
+      }, 2000);
     },
   },
 };

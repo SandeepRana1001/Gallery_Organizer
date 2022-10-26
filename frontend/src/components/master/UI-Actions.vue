@@ -4,7 +4,7 @@
       <div class="row justify-content-center">
         <div class="col-lg-6 col-md-6 col-sm-10 col-12">
           <div class="text-center">
-            <button v-on:click="openModal">
+            <button v-on:click="openModal('#uploadModal')">
               <i class="fa-solid fa-upload"></i>
               <span> Upload </span>
             </button>
@@ -16,7 +16,7 @@
               <i class="fa-solid fa-copy"></i>
               <span> Copy </span>
             </button>
-            <button>
+            <button v-on:click="openModal('#deleteModal')">
               <i class="fa-sharp fa-solid fa-trash"></i>
               <span> Delete </span>
             </button>
@@ -59,9 +59,14 @@ export default {
     modalTriggered() {
       this.$emit("modalTriggered", true);
     },
-    openModal() {
-      $("#uploadModal ").addClass("show").fadeIn(1000);
+    typeOfModal(type) {
+      this.$emit("typeOfModal", type);
+    },
+    openModal(id) {
+      $(id).addClass("show").fadeIn(1000);
       this.modalTriggered();
+      if (id == "#deleteModal") this.typeOfModal("deleteModal");
+      else if (id == "#uploadModal") this.typeOfModal("uploadModal");
     },
   },
 };
