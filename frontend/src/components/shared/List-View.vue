@@ -13,8 +13,13 @@
                 v-on:click="addToQueue(item._id)"
                 :checked="checkIfActive(item._id)"
               />
-              <label class="form-check-label" for="firstCheckbox">
-                {{ item.displayName }}
+              <label class="form-check-label" :for="item._id">
+                <span>
+                  <i class="fa-regular fa-file"></i>
+                </span>
+                <span>
+                  {{ item.displayName }}
+                </span>
               </label>
             </li>
           </ul>
@@ -27,6 +32,9 @@
 <style scoped>
 .list-group-item input {
   margin-right: 20px !important;
+}
+.form-check-label span {
+  margin: 0 5px;
 }
 </style>
 
@@ -44,7 +52,10 @@ export default {
     };
   },
   methods: {
-    addToQueue(id) {
+    enableUIActions() {
+      this.$emit("enableUIAction", true);
+    },
+    async addToQueue(id) {
       if (this.queue.includes(id)) {
         this.queue = this.queue.filter((element) => element !== id);
       } else {

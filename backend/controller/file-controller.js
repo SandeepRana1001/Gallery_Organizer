@@ -6,6 +6,7 @@ const fs = require('fs')
 
 const uploadFile = async (req, res, next) => {
 
+    console.log(req.body)
     const url = req.protocol + '://' + req.get('host')
     for (var i = 0; i < req.files.length; i++) {
         console.log(req.files[i])
@@ -13,7 +14,8 @@ const uploadFile = async (req, res, next) => {
         const obj = new Gallery({
             backend_name: req.files[i].filename,
             displayName: req.files[i].originalname,
-            url: url + '/images/gallery/' + req.files[i].filename
+            url: url + '/images/gallery/' + req.files[i].filename,
+            creator: req.body.id
         });
 
         await obj.save()

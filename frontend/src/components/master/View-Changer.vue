@@ -55,7 +55,6 @@ export default {
   methods: {
     send() {
       this.$emit("send", this.displayType);
-      this.$emit("isList", this.isList);
     },
     changeType() {
       this.isList = !this.isList;
@@ -66,6 +65,7 @@ export default {
       }
       this.$store.dispatch("updateView", { view: this.displayType });
       this.send();
+      console.log(this.$store.state.userStore.user._id);
     },
   },
   mounted() {

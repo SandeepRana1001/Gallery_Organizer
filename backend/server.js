@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const cors = require('cors')
 const cookieparser = require('cookie-parser');
 const uploadRoutes = require('./routes/upload-routes');
+const userRoutes = require('./routes/user-routes');
+
 const path = require('path');
 
 require('dotenv').config()
@@ -23,6 +25,7 @@ app.use(bodyParser.json())
 app.use('/images/gallery', express.static(path.join('images', 'gallery')))
 
 app.use('/api/upload', uploadRoutes);
+app.use('/api/users', userRoutes);
 
 const url = `${process.env.MONGO_URI}`
 mongoose.connect(url, {

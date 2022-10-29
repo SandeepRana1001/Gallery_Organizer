@@ -1,10 +1,9 @@
 const { v4: uuidv4 } = require('uuid');
 const { validationResult } = require('express-validator');
-const HttpError = require('../../middlewares/http-error');
-const User = require('./userModel');
-const Cart = require('../cart/cartModel');
+const HttpError = require('../middleware/http-error');
+const User = require('../model/user-model');
 const passwordHash = require('password-hash');
-const jwt = require('../../utils/token')
+const jwt = require('../utils/token')
 
 const createAccount = async (req, res, next) => {
 
@@ -33,7 +32,6 @@ const createAccount = async (req, res, next) => {
         name,
         email,
         password: hashed_key,
-        image: 'https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dmlld3xlbnwwfHwwfHw%3D&w=1000&q=80',
     })
 
 
@@ -44,16 +42,10 @@ const createAccount = async (req, res, next) => {
         return next(error)
     }
 
-    const createdCart = new Cart({
-        creator: createdUser._id
-    })
-    try {
-        await createdCart.save()
-    } catch (err) {
-        const error = new HttpError('Cannot Save the cart record' + err, 500)
-        return next(error)
-    }
-    res.status(201).json({ user: createdUser.toObject({ getters: true }), cart: createdCart.toObject({ getters: true }) })
+    const data = createdUser.toJSON()
+    delete data.password
+
+    res.status(201).json({ user: data })
 }
 
 const signIn = async (req, res, next) => {
@@ -83,21 +75,14 @@ const signIn = async (req, res, next) => {
 
         return next(new HttpError('Invalid Password Provided', 500))
     }
-    const token = jwt.getNewToken({ _id: existingUser.id }, '1d')
-    const refreshToken = jwt.getNewToken({ _id: existingUser.id }, '2d')
 
-    // Assigning refresh token in http-only cookie 
-    res.cookie('jwt', refreshToken, {
-        httpOnly: true,
-        sameSite: 'None', secure: true,
-        maxAge: 24 * 60 * 60 * 1000
-    });
+
+
 
     const user = {
-        id: existingUser.id,
+        _id: existingUser.id,
         email: existingUser.email,
         name: existingUser.name,
-        token
     }
 
     return res.status(202).json({ user })

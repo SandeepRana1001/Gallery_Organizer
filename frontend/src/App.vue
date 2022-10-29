@@ -1,15 +1,7 @@
 <template>
   <div id="app">
     <Header />
-    <UIActions
-      @modalTriggered="checkIfModalTriggered"
-      @typeOfModal="checkTypeOfModal"
-    />
-    <DashboardPage v-if="!isModalTriggered" />
-    <UploadComponent @closeModal="checkIfModalAreClosed" />
-    <div class="deleteModal" v-if="isDeleteModal">
-      <DeleteComponent @closeModal="checkIfModalAreClosed" />
-    </div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -21,6 +13,12 @@
 
 body {
   overflow-x: hidden;
+}
+
+.theme,
+.theme:hover {
+  background-color: blueviolet;
+  color: white;
 }
 </style>
 
@@ -67,6 +65,16 @@ export default {
         $("#deleteModal").addClass("show").fadeIn(1000);
       }, 2000);
     },
+  },
+  mounted() {
+    const data = {
+      name: localStorage.getItem("name"),
+      email: localStorage.getItem("email"),
+      _id: localStorage.getItem("_id"),
+    };
+    this.$store.dispatch("updateUser", data);
+
+    console.log(data);
   },
 };
 </script>

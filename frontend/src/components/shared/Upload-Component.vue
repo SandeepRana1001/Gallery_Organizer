@@ -139,12 +139,6 @@
   font-weight: bolder;
 }
 
-.theme {
-  color: white;
-  background-color: #8e44ad;
-  margin: 20px 0;
-}
-
 .image_container {
   height: 200px;
   width: 200px;
@@ -234,6 +228,8 @@ export default {
         // console.log(this.files[i]);
         formData.append("images", this.files[i]);
       }
+      formData.append("id", this.$store.state.userStore.user._id);
+
       const bar = document.getElementById("progress-bar");
       //   const config = {
       //     onUploadProgress: function (progressEvent) {

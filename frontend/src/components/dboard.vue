@@ -7,7 +7,7 @@
           <p class="text-center" v-if="length === 0">
             Please upload some image first
           </p>
-          <ListView v-if="isList" />
+          <ListView v-if="isList" @enableUIActions="isUIActionEnabled" />
           <ThumbnailView v-if="!isList" />
         </div>
       </div>
@@ -46,10 +46,12 @@ export default {
     receive(childData) {
       this.isList = childData === "list" ? true : false; // "Hello World"
     },
+    isUIActionEnabled(childData) {
+      console.log("Working");
+      this.$emit("isUIActionEnabled", childData);
+    },
   },
   async mounted() {
-    console.log(this.$store.state.fileStore.view);
-
     let response = await axios.get("http://localhost:5000/api/upload/");
     this.files = await response.data.data;
     this.$store.dispatch("updateFiles", this.files);

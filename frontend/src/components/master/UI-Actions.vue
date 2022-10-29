@@ -2,8 +2,12 @@
   <section class="">
     <div class="container-fluid ui-actions">
       <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-6 col-sm-10 col-12">
+        <div class="col-lg-7 col-md-7 col-sm-10 col-12">
           <div class="text-center">
+            <button v-on:click="openModal('#uploadModal')">
+              <i class="fa-regular fa-folder"></i>
+              <span> New Folder </span>
+            </button>
             <button v-on:click="openModal('#uploadModal')">
               <i class="fa-solid fa-upload"></i>
               <span> Upload </span>
@@ -55,6 +59,11 @@ a {
 import $ from "jquery";
 export default {
   name: "UiActions",
+  data() {
+    return {
+      isVisible: false,
+    };
+  },
   methods: {
     modalTriggered() {
       this.$emit("modalTriggered", true);
@@ -68,6 +77,15 @@ export default {
       if (id == "#deleteModal") this.typeOfModal("deleteModal");
       else if (id == "#uploadModal") this.typeOfModal("uploadModal");
     },
+    setVisible(val) {
+      this.isVisible = val;
+    },
+  },
+  mounted() {
+    console.log(this.$store.state.fileStore.toActionFiles.length);
+    if (this.$store.state.fileStore.toActionFiles.length > 0) {
+      this.setVisible(true);
+    }
   },
 };
 </script>

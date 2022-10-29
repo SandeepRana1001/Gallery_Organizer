@@ -52,6 +52,7 @@ input[type="checkbox"] {
 /* eslint-disable */
 
 import axios from "axios";
+import jquery from "jquery";
 export default {
   name: "ListView",
   props: ["isList"],
