@@ -4,6 +4,28 @@
       <div class="row mt-4">
         <div class="col-lg-12 col-md-12 col-sm-12 col-12">
           <ul class="list-group">
+            <li
+              class="list-group-item"
+              v-for="folder in folders"
+              :key="folder._id"
+            >
+              <input
+                class="form-check-input me-1"
+                type="checkbox"
+                value=""
+                :id="folder._id"
+                v-on:click="addToQueue(folder._id)"
+                :checked="checkIfActive(folder._id)"
+              />
+              <router-link :to="`/folder/${folder._id}`">
+                <span>
+                  <i class="fas fa-folder"></i>
+                </span>
+                <span>
+                  {{ folder.name }}
+                </span>
+              </router-link>
+            </li>
             <li class="list-group-item" v-for="item in files" :key="item._id">
               <input
                 class="form-check-input me-1"
@@ -33,7 +55,11 @@
 .list-group-item input {
   margin-right: 20px !important;
 }
-.form-check-label span {
+a {
+  text-decoration: none;
+}
+.form-check-label span,
+a span {
   margin: 0 5px;
 }
 </style>
@@ -44,10 +70,10 @@
 import axios from "axios";
 export default {
   name: "ListView",
-  props: {},
+  props: ["files", "folders"],
   data() {
     return {
-      files: [],
+      // files: [],
       queue: [],
     };
   },
@@ -69,11 +95,6 @@ export default {
       }
       return false;
     },
-  },
-  async mounted() {
-    let response = await axios.get("http://localhost:5000/api/upload/");
-    this.files = response.data.data;
-    this.$store.dispatch("updateFiles", this.files);
   },
 };
 </script>

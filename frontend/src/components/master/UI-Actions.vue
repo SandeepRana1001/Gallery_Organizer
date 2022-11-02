@@ -4,7 +4,7 @@
       <div class="row justify-content-center">
         <div class="col-lg-7 col-md-7 col-sm-10 col-12">
           <div class="text-center">
-            <button v-on:click="openModal('#uploadModal')">
+            <button v-on:click="openModal('#newFolder')">
               <i class="fa-regular fa-folder"></i>
               <span> New Folder </span>
             </button>

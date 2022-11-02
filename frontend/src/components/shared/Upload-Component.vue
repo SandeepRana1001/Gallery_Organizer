@@ -186,9 +186,6 @@ export default {
       $(id).removeClass("show").fadeOut(1000);
       this.closingModal(val);
     },
-    game() {
-      this.$emit("game", "game");
-    },
 
     fileHandler(event) {
       let num = 0;
@@ -229,6 +226,7 @@ export default {
         formData.append("images", this.files[i]);
       }
       formData.append("id", this.$store.state.userStore.user._id);
+      formData.append("parent", this.$store.state.fileStore.current_folder);
 
       const bar = document.getElementById("progress-bar");
       //   const config = {
@@ -255,8 +253,8 @@ export default {
       );
       if (response.status === 200) {
         // console.clear();
-        response = await axios.get("http://localhost:5000/api/upload/");
-        this.$store.dispatch("updateFiles", response.data.data);
+        // response = await axios.get("http://localhost:5000/api/upload/");
+        // this.$store.dispatch("updateFiles", response.data.data);
         this.closeModal("#previewModal", true);
 
         // this.$router.go(); //refresh the page

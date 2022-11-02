@@ -115,9 +115,7 @@ export default {
       console.log();
       if (this.checkIfValid()) {
         // this.isDisabled = true;
-        const formData = new FormData();
-        formData.append("email", this.data.email);
-        formData.append("password", this.data.password);
+
         const options = {
           url: process.env.VUE_APP_SERVER + "users/signIn",
           method: "POST",

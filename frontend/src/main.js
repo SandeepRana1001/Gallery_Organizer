@@ -4,6 +4,7 @@ import App from './App.vue'
 import VueRouter from 'vue-router'
 import LogInPage from './pages/login-page'
 import DboardPage from "./pages/dboard-page.vue";
+import FolderPage from "./pages/folder-page.vue";
 import Register from "./pages/register-page.vue";
 
 import store from './store/'
@@ -15,6 +16,7 @@ const routes = [
   { path: '/signIn', component: LogInPage },
   { path: '/signUp', component: Register },
   { path: '/dashboard', component: DboardPage },
+  { path: '/folder/:id', component: FolderPage },
 
 
 ]

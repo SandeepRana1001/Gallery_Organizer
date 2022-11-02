@@ -1,8 +1,20 @@
 <template>
-  <section class="dashboard">
+  <section class="folder">
     <ViewChanger @send="receive" />
     <div class="container-fluid">
       <div class="row mt-4">
+        <div class="container">
+          <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <router-link to="/dashboard">Dashboard</router-link>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                {{ name }}
+              </li>
+            </ol>
+          </nav>
+        </div>
         <div class="col-lg-12 col-md-12 col-sm-12 col-12">
           <p class="text-center" v-if="length === 0">
             Please upload some image first
@@ -28,7 +40,7 @@ import axios from "axios";
 import ViewChanger from "./master/View-Changer.vue";
 import ThumbnailView from "./shared/Thumbnail-View.vue";
 export default {
-  name: "dboard",
+  name: "folderBoard",
   components: {
     ListView,
     ViewChanger,
@@ -41,6 +53,7 @@ export default {
       isList: true,
       length: 0,
       folders: [],
+      name: "",
     };
   },
   methods: {
@@ -54,21 +67,28 @@ export default {
   },
   async mounted() {
     this.length = this.$store.state.fileStore.file;
-    const current_dir = this.$store.state.fileStore.current_folder;
+    const id = window.location.href.split("/folder/")[1];
+    const current_dir = id;
+
+    this.$store.dispatch("updateFolderParent", id);
+
     const creator = this.$store.state.userStore.user._id;
+
     let response = await axios.get(
       `${process.env.VUE_APP_SERVER}upload/${creator}`
     );
 
-    this.$store.dispatch("updateFiles", response.data.data);
-    this.$store.dispatch("updateFolders", response.data.folders);
-
     this.files = response.data.data.filter((file) => {
-      return file.parent === "none";
+      return file.parent === current_dir;
     });
+
     this.folders = response.data.folders.filter((folder) => {
-      return folder.parent === "none";
+      return folder.parent === current_dir;
     });
+
+    this.name = response.data.folders.find((folder) => {
+      return folder._id === id;
+    }).name;
   },
 };
 </script>

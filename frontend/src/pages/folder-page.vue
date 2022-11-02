@@ -4,7 +4,7 @@
       @modalTriggered="checkIfModalTriggered"
       @typeOfModal="checkTypeOfModal"
     />
-    <dboard v-if="!isModalTriggered" @isUIActionEnabled="showUIAction" />
+    <folder-board v-if="!isModalTriggered" @isUIActionEnabled="showUIAction" />
     <UploadComponent @closeModal="checkIfModalAreClosed" />
     <div class="deleteModal" v-if="isDeleteModal">
       <DeleteComponent @closeModal="checkIfModalAreClosed" />
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import Dboard from "@/components/dboard.vue";
+import folderBoard from "@/components/folder-board.vue";
 import $ from "jquery";
 import UIActions from "../components/master/UI-Actions.vue";
 import UploadComponent from "../components/shared/Upload-Component.vue";
@@ -22,7 +22,7 @@ import DeleteComponent from "../components/shared/Delete-Component.vue";
 import NewFolder from "@/components/shared/new-folder.vue";
 export default {
   components: {
-    Dboard,
+    folderBoard,
     UploadComponent,
     DeleteComponent,
     UIActions,
@@ -59,7 +59,9 @@ export default {
     if (!this.$store.state.userStore.user._id) {
       this.$router.push("/signUp");
     }
-    this.$store.dispatch("updateFolderParent", "none");
+
+    const id = window.location.href.split("/folder/")[1];
+    this.$store.dispatch("updateFolderParent", id);
   },
 };
 </script>

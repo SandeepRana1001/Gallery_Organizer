@@ -1,11 +1,12 @@
 const Gallery = require('../model/gallery-model')
+const Folder = require('../model/folder-model')
 const HttpError = require('../middleware/http-error');
 const mongoose = require('mongoose');
 const fs = require('fs')
 
 
 const uploadFile = async (req, res, next) => {
-
+    console.clear()
     console.log(req.body)
     const url = req.protocol + '://' + req.get('host')
     for (var i = 0; i < req.files.length; i++) {
@@ -14,6 +15,7 @@ const uploadFile = async (req, res, next) => {
         const obj = new Gallery({
             backend_name: req.files[i].filename,
             displayName: req.files[i].originalname,
+            parent: req.body.parent,
             url: url + '/images/gallery/' + req.files[i].filename,
             creator: req.body.id
         });
@@ -25,10 +27,26 @@ const uploadFile = async (req, res, next) => {
 }
 
 const getData = async (req, res, next) => {
-    const data = await Gallery.find({})
+
+    const id = req.params.id
+    let data, folder_data;
+    try {
+        data = await Gallery.find({})
+        folder_data = await Folder.find({ id })
+    } catch (err) {
+        console.log('Error is')
+        console.log(err)
+        return next(err)
+    }
+
+    data = data.filter((element) => {
+        return element.creator.valueOf() === id
+    })
+
 
     res.status(200).json({
-        data
+        data,
+        folders: folder_data
     })
 }
 

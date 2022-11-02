@@ -5,7 +5,7 @@ const fileController = require('../controller/file-controller')
 
 const router = express.Router()
 
-router.get('/', fileController.getData)
+router.get('/:id', fileController.getData)
 
 
 router.post('/uploadData', fileUpload.array('images', 10), fileController.uploadFile)

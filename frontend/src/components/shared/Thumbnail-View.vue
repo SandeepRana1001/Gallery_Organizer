@@ -55,10 +55,9 @@ import axios from "axios";
 import jquery from "jquery";
 export default {
   name: "ListView",
-  props: ["isList"],
+  props: ["isList", "files", "folders"],
   data() {
     return {
-      files: [],
       queue: [],
     };
   },
@@ -77,11 +76,6 @@ export default {
       }
       return false;
     },
-  },
-  async mounted() {
-    let response = await axios.get("http://localhost:5000/api/upload/");
-    this.files = response.data.data;
-    this.$store.dispatch("updateFiles", this.files);
   },
 };
 </script>

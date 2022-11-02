@@ -5,6 +5,8 @@ const cors = require('cors')
 const cookieparser = require('cookie-parser');
 const uploadRoutes = require('./routes/upload-routes');
 const userRoutes = require('./routes/user-routes');
+const folderRoutes = require('./routes/folder-routes');
+
 
 const path = require('path');
 
@@ -26,6 +28,8 @@ app.use('/images/gallery', express.static(path.join('images', 'gallery')))
 
 app.use('/api/upload', uploadRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/folder', folderRoutes);
+
 
 const url = `${process.env.MONGO_URI}`
 mongoose.connect(url, {
