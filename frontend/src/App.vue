@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header />
-    <router-view></router-view>
+    <router-view :key="$route.path"></router-view>
   </div>
 </template>
 
@@ -73,8 +73,6 @@ export default {
       _id: localStorage.getItem("_id"),
     };
     this.$store.dispatch("updateUser", data);
-
-    console.log(data);
   },
 };
 </script>

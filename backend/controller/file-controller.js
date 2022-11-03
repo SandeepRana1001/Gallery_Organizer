@@ -34,8 +34,6 @@ const getData = async (req, res, next) => {
         data = await Gallery.find({})
         folder_data = await Folder.find({ id })
     } catch (err) {
-        console.log('Error is')
-        console.log(err)
         return next(err)
     }
 
@@ -53,45 +51,123 @@ const getData = async (req, res, next) => {
 
 const deleteImage = async (req, res, next) => {
 
-    console.clear();
     const files = req.body.files
-    let existingImage;
-    console.log(files)
+    const folders = req.body.folders
+    let existingImage, existingFolder;
+
     let imagePath;
-    files.forEach(async (imageId) => {
-        try {
-            existingImage = await Gallery.findOne({ _id: imageId })
-        } catch (err) {
-            const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
-            return next(error)
-        }
-        if (!existingImage) {
-            const error = new HttpError('Something went wrong. Cannot Remove Item', 500)
-            return next(error)
-        }
-        imagePath = ''
-        imagePath = 'images/gallery/' + existingImage.backend_name
 
-        try {
-            const sess = await mongoose.startSession()
-            sess.startTransaction()
-            await existingImage.remove({ session: sess })
-            await sess.commitTransaction()
-
-        } catch (err) {
-            const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
-            return next(error)
-        }
-
-        fs.unlink(imagePath, (err) => {
-            console.clear()
-            console.log(err)
+    if (files.length === 0 && folders.length === 0) {
+        console.log('This works')
+        return next({
+            msg: 'Invalid Input Passsed',
+            status: 422
         })
+    }
 
-    })
+    if (files.length > 0) {
+
+
+        files.forEach(async (imageId) => {
+            try {
+                existingImage = await Gallery.findOne({ _id: imageId })
+            } catch (err) {
+                // const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
+                return next({
+                    msg: 'Something went wrong',
+                    status: 500
+                })
+            }
+            if (!existingImage) {
+                const error = new HttpError('Something went wrong. Cannot Remove Item', 500)
+                return next(error)
+            }
+            imagePath = ''
+            imagePath = 'images/gallery/' + existingImage.backend_name
+
+            try {
+                const sess = await mongoose.startSession()
+                sess.startTransaction()
+                await existingImage.remove({ session: sess })
+                await sess.commitTransaction()
+
+            } catch (err) {
+                const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
+                return next(error)
+            }
+
+            fs.unlink(imagePath, (err) => {
+                console.clear()
+                console.log(err)
+            })
+
+        })
+    }
+
+    if (folders.length > 0) {
+
+        folders.forEach(async (folderId) => {
+            try {
+                existingFolder = await Folder.findOne({ _id: folderId })
+            } catch (err) {
+                return next(new HttpError(err, 500))
+            }
+            try {
+                const sess = await mongoose.startSession()
+                sess.startTransaction()
+                await existingFolder.remove({ session: sess })
+                await sess.commitTransaction()
+
+            } catch (err) {
+                const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
+                return next(error)
+            }
+
+            /* Remove images inside the folder */
+
+            try {
+                existingImage = await Gallery.find({ parent: folderId })
+            } catch (err) {
+                // const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
+                return next({
+                    msg: 'Something went wrong',
+                    status: 500
+                })
+            }
+
+
+            existingImage.forEach(async (existingImage) => {
+
+
+                imagePath = ''
+                imagePath = 'images/gallery/' + existingImage.backend_name
+
+                try {
+                    const sess = await mongoose.startSession()
+                    sess.startTransaction()
+                    await existingImage.remove({ session: sess })
+                    await sess.commitTransaction()
+
+                } catch (err) {
+                    const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
+                    return next(error)
+                }
+
+                fs.unlink(imagePath, (err) => {
+                    console.log(err)
+                })
+            })
+
+
+        })
+    }
+
 
     return res.status(200).json({ success: 'Removed' })
 }
+
+
+
 
 exports.uploadFile = uploadFile
 exports.getData = getData

@@ -30,7 +30,6 @@ const checkDuplicates = async (data) => {
 }
 
 const newFolder = async (req, res, next) => {
-    console.log(req.body)
 
     const errors = validationResult(req)
 
@@ -62,5 +61,37 @@ const newFolder = async (req, res, next) => {
     res.status(201).json({ folder: newFolder })
 }
 
+const deleteFolder = async (req, res, next) => {
+    console.log(res.body.folders)
+
+    if (!res.body.folders) {
+        return next('No value provided')
+
+    }
+
+    const folders = req.body.folders;
+    let existingFolder;
+
+    folders.map(async (id) => {
+        try {
+            existingFolder = await Folder.find({ id: id })
+        } catch (err) {
+            return next(err)
+        }
+        try {
+            const sess = await mongoose.startSession()
+            sess.startTransaction()
+            await existingFolder.remove({ session: sess })
+            await sess.commitTransaction()
+
+        } catch (err) {
+            const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
+            return next(error)
+        }
+    })
+
+    return res.status(200).json({ success: 'Removed' })
+}
 
 exports.newFolder = newFolder
+// exports.deleteFolder = deleteFolder

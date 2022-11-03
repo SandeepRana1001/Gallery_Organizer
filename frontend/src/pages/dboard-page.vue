@@ -1,14 +1,30 @@
 <template>
   <section class="dashboard-page">
+    <!-- <div v-if="err.length > 0">
+      <toast-component
+        color="text-bg-danger"
+        icon="fas fa-exclamation-circle"
+        :msg="err"
+      />
+    </div> -->
     <UIActions
       @modalTriggered="checkIfModalTriggered"
       @typeOfModal="checkTypeOfModal"
+      :enableUIActions="enableUIActions"
     />
-    <dboard v-if="!isModalTriggered" @isUIActionEnabled="showUIAction" />
+    <dboard
+      v-if="!isModalTriggered"
+      @isUIActionEnabled="showUIAction"
+      @remountUIAction="isUIActionRemounted"
+    />
     <UploadComponent @closeModal="checkIfModalAreClosed" />
     <div class="deleteModal" v-if="isDeleteModal">
-      <DeleteComponent @closeModal="checkIfModalAreClosed" />
+      <DeleteComponent
+        @closeModal="checkIfModalAreClosed"
+        @receiveErrors="getErrors"
+      />
     </div>
+
     <NewFolder @closeModal="checkIfModalAreClosed" />
   </section>
 </template>
@@ -34,9 +50,19 @@ export default {
       isModalTriggered: false,
       isModalClose: true,
       isDeleteModal: false,
+      err: "",
+      enableUIActions: false,
     };
   },
   methods: {
+    isUIActionRemounted(childData) {
+      this.enableUIActions = childData;
+    },
+    getErrors(childErrors) {
+      this.err = childErrors;
+      console.log(this.err);
+      $("#liveToast").addClass("show").fadeIn(2000);
+    },
     checkIfModalTriggered(childData) {
       this.isModalTriggered = childData;
     },

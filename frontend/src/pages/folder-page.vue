@@ -3,8 +3,14 @@
     <UIActions
       @modalTriggered="checkIfModalTriggered"
       @typeOfModal="checkTypeOfModal"
+      :enableUIActions="enableUIActions"
     />
-    <folder-board v-if="!isModalTriggered" @isUIActionEnabled="showUIAction" />
+    <folder-board
+      v-if="!isModalTriggered"
+      @isUIActionEnabled="showUIAction"
+      @reload="checkIfModalAreClosed"
+      @remountUIAction="isUIActionRemounted"
+    />
     <UploadComponent @closeModal="checkIfModalAreClosed" />
     <div class="deleteModal" v-if="isDeleteModal">
       <DeleteComponent @closeModal="checkIfModalAreClosed" />
@@ -34,13 +40,24 @@ export default {
       isModalTriggered: false,
       isModalClose: true,
       isDeleteModal: false,
+      enableUIActions: false,
     };
   },
   methods: {
+    isUIActionRemounted(childData) {
+      this.enableUIActions = childData;
+    },
     checkIfModalTriggered(childData) {
       this.isModalTriggered = childData;
     },
+    reloadModal(childData) {
+      console.log("Reload Modal " + childData);
+      this.isModalTriggered = childData;
+
+      this.isModalTriggered = !childData;
+    },
     checkIfModalAreClosed(childData) {
+      console.log(childData);
       this.isModalTriggered = !childData;
       this.isDeleteModal = false;
     },
@@ -56,6 +73,7 @@ export default {
     },
   },
   mounted() {
+    console.log("mounted page folder");
     if (!this.$store.state.userStore.user._id) {
       this.$router.push("/signUp");
     }

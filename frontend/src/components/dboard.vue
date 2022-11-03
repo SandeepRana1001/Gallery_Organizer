@@ -7,8 +7,18 @@
           <p class="text-center" v-if="length === 0">
             Please upload some image first
           </p>
-          <ListView v-if="isList" :files="files" :folders="folders" />
-          <ThumbnailView v-if="!isList" :files="files" :folders="folders" />
+          <ListView
+            v-if="isList"
+            :files="files"
+            :folders="folders"
+            @enableUIAction="remountUIAction"
+          />
+          <ThumbnailView
+            v-if="!isList"
+            :files="files"
+            :folders="folders"
+            @enableUIAction="remountUIAction"
+          />
         </div>
       </div>
     </div>
@@ -44,6 +54,9 @@ export default {
     };
   },
   methods: {
+    remountUIAction(childData) {
+      this.$emit("remountUIAction", childData);
+    },
     receive(childData) {
       this.isList = childData === "list" ? true : false; // "Hello World"
     },
@@ -53,7 +66,11 @@ export default {
     },
   },
   async mounted() {
-    this.length = this.$store.state.fileStore.file;
+    console.log("Dboard Mounted");
+    this.length =
+      this.$store.state.fileStore.file.length +
+      this.$store.state.fileStore.folder.length;
+
     const current_dir = this.$store.state.fileStore.current_folder;
     const creator = this.$store.state.userStore.user._id;
     let response = await axios.get(

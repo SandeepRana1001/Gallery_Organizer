@@ -5,11 +5,16 @@ Vue.use(Vuex)
 
 const fileStore = {
     state: {
-        file: [],
         view: 'list',
-        toActionFiles: [],
+        file: [],
         folder: [],
+        toActionFiles: [],
+        toActionFolders: [],
         current_folder: 'none',
+        bread_crumb: [{
+            name: 'Dashboard',
+            id: 'none'
+        }]
     },
     getters: {
 
@@ -17,6 +22,8 @@ const fileStore = {
     mutations: {
 
         updateFiles(state, body) {
+            state.file = []
+
             const data = body;
             data.forEach((element) => {
                 var dat = {
@@ -40,7 +47,12 @@ const fileStore = {
             state.toActionFiles = body
         },
 
+        updateFolderAction(state, body) {
+            state.toActionFolders = body
+        },
+
         updateFolders(state, body) {
+            state.folder = []
             const data = body;
             data.forEach((element) => {
                 var dat = {
@@ -55,7 +67,28 @@ const fileStore = {
 
         updateFolderParent(state, body) {
             state.current_folder = body
+        },
+
+        addBreadCrumb(state, body) {
+
+            state.bread_crumb.push(body)
+        },
+        removeBreadCrumb(state, body) {
+            if (body.type === 'all') {
+                state.bread_crumb = [
+                    {
+                        name: 'Dashboard',
+                        id: 'none'
+                    }
+                ]
+            } else {
+                state.bread_crumb = state.bread_crumb.filter((item) => {
+                    return state.bread_crumb.id !== body.id
+                })
+            }
+
         }
+
 
     },
     actions: {
@@ -73,6 +106,12 @@ const fileStore = {
         },
         updateFolders(context, body) {
             context.commit('updateFolders', body)
+        },
+        addBreadCrumb(context, body) {
+            context.commit('addBreadCrumb', body)
+        },
+        updateFolderAction(context, body) {
+            context.commit('updateFolderAction', body)
         },
 
     },

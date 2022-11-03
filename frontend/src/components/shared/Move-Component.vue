@@ -1,24 +1,24 @@
 <template>
-  <section class="delete-component">
+  <section class="delete-component-folder">
     <div
       class="modal fade"
       data-bs-backdrop="static"
       data-bs-keyboard="false"
-      id="deleteModal"
+      id="deleteFolderModal"
       tabindex="-1"
-      aria-labelledby="deleteModalLabel"
+      aria-labelledby="deleteFolderModal"
       aria-hidden="true"
     >
       <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="deleteModalLabel">
-              Delete Selected Images
+            <h1 class="modal-title fs-5" id="deleteFolderModal">
+              Move Your Files
             </h1>
             <button
               type="button"
               class="btn-close"
-              v-on:click="closeModal('#deleteModal', true)"
+              v-on:click="closeModal('#deleteFolderModal', true)"
               v-if="success"
               aria-label="Close"
             ></button>
@@ -72,7 +72,7 @@
 import axios from "axios";
 import $ from "jquery";
 export default {
-  name: "DeleteComponent",
+  name: "DeleteComponentFolder",
   data() {
     return {
       success: false,
@@ -90,36 +90,28 @@ export default {
   },
   async mounted() {
     this.success = false;
-    let data = this.$store.state.fileStore.toActionFiles;
-    let folder_data = this.$store.state.fileStore.toActionFolders;
-
-    console.clear();
-    console.log("Files");
-
-    console.log(data);
-    console.log("Folders");
-
-    console.log(folder_data);
-
-    // if (data.length > 1) {
-    this.text = "Data Deleted Successfully";
-    // } else {
-    //   this.text = "File Deleted Successfully";
-    // }
+    let data = this.$store.state.fileStore.toActionFolders;
+    if (data.length > 1) {
+      this.text = "Folders Deleted Successfully";
+    } else {
+      this.text = "Folder Deleted Successfully";
+    }
     var formdata = {};
     console.log(formdata);
 
+    return;
+
     const response = await axios.delete(
-      `${process.env.VUE_APP_SERVER}upload/deleteData`,
+      `${process.env.VUE_APP_SERVER}folder/deleteData`,
       {
         data: {
-          files: data,
-          folders: folder_data,
+          folders: data,
         },
       },
       {
         headers: {
-          "Content-Type": "multipart/form-data",
+          Accept: "application/json",
+          "Content-Type": "application/json;charset=UTF-8",
         },
       }
     );

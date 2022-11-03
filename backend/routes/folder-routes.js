@@ -11,4 +11,6 @@ router.post('/newFolder',
     ],
     folderContoller.newFolder)
 
+// router.delete('/deleteData', folderContoller.deleteFolder)
+
 module.exports = router

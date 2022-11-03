@@ -2,7 +2,7 @@
   <section class="">
     <div class="container-fluid ui-actions">
       <div class="row justify-content-center">
-        <div class="col-lg-7 col-md-7 col-sm-10 col-12">
+        <div class="col-lg-8 col-md-8 col-sm-12 col-12">
           <div class="text-center">
             <button v-on:click="openModal('#newFolder')">
               <i class="fa-regular fa-folder"></i>
@@ -12,17 +12,20 @@
               <i class="fa-solid fa-upload"></i>
               <span> Upload </span>
             </button>
-            <button>
+            <!-- <button v-if="enableUIActions">
               <i class="fa-solid fa-arrow-right-to-bracket"></i>
               <span> Move </span>
             </button>
-            <button>
+            <button v-if="enableUIActions">
               <i class="fa-solid fa-copy"></i>
               <span> Copy </span>
-            </button>
-            <button v-on:click="openModal('#deleteModal')">
+            </button> -->
+            <button
+              v-on:click="openModal('#deleteModal')"
+              v-if="enableUIActions"
+            >
               <i class="fa-sharp fa-solid fa-trash"></i>
-              <span> Delete </span>
+              <span> Delete Files </span>
             </button>
           </div>
         </div>
@@ -59,6 +62,7 @@ a {
 import $ from "jquery";
 export default {
   name: "UiActions",
+  props: ["enableUIActions"],
   data() {
     return {
       isVisible: false,
@@ -76,6 +80,9 @@ export default {
       this.modalTriggered();
       if (id == "#deleteModal") this.typeOfModal("deleteModal");
       else if (id == "#uploadModal") this.typeOfModal("uploadModal");
+      else if (id == "#deleteFolderModal") {
+        this.typeOfModal("deleteFolderModal");
+      }
     },
     setVisible(val) {
       this.isVisible = val;

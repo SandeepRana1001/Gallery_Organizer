@@ -38,6 +38,7 @@
                       aria-describedby="folder_name"
                       placeholder="Folder Name"
                       v-model="folder_name"
+                      autocomplete="off"
                     />
                   </div>
 
