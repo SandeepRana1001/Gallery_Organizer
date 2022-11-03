@@ -1,7 +1,10 @@
 <template>
   <div id="app">
-    <Header />
-    <router-view :key="$route.path"></router-view>
+    <Header :isUserLoggedIn="isUserLoggedIn" @resetHeader="resetHeader" />
+    <router-view
+      :key="$route.path"
+      @resetHeader="isHeaderRemounted"
+    ></router-view>
   </div>
 </template>
 
@@ -48,9 +51,18 @@ export default {
       isModalTriggered: false,
       isModalClose: true,
       isDeleteModal: false,
+      isUserLoggedIn: false,
     };
   },
   methods: {
+    resetHeader(childData) {
+      this.isUserLoggedIn = childData;
+      this.$router.push("/signUp");
+      window.location.reload();
+    },
+    isHeaderRemounted(childData) {
+      this.isUserLoggedIn = childData;
+    },
     checkIfModalTriggered(childData) {
       this.isModalTriggered = childData;
     },

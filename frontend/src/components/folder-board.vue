@@ -6,7 +6,7 @@
         <bread-crumbs />
 
         <div class="col-lg-12 col-md-12 col-sm-12 col-12">
-          <p class="text-center" v-if="length === 0">
+          <p class="text-center" v-if="!length">
             Please upload some image first
           </p>
           <ListView
@@ -135,10 +135,9 @@ export default {
     },
   },
   async mounted() {
-    console.log("Folder board loaded");
     this.length =
-      this.$store.state.fileStore.file.length +
-      this.$store.state.fileStore.folder.length;
+      this.$store.state.fileStore.file.length > 0 ||
+      this.$store.state.fileStore.folder.length > 0;
 
     const id = window.location.href.split("/folder/")[1];
     const current_dir = id;

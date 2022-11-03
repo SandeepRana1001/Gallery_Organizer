@@ -17,13 +17,25 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
-        <form class="d-flex" role="search" v-if="!updateHeader">
-          <router-link to="/signUp" class="btn btn-success" type="submit">
+        <form class="d-flex" role="search">
+          <router-link
+            to="/signUp"
+            class="btn btn-success"
+            type="submit"
+            v-if="!isUserLoggedIn"
+          >
             <span>
               <i class="fa-solid fa-user"></i>
             </span>
             <span> Register </span>
           </router-link>
+          <button
+            class="btn btn-danger"
+            v-on:click="logout"
+            v-if="isUserLoggedIn"
+          >
+            LogOut
+          </button>
         </form>
       </div>
     </div>
@@ -49,11 +61,21 @@ a span {
 
 export default {
   name: "Header",
-  props: ["updateHeader"],
+  props: ["isUserLoggedIn"],
   data() {
     return {
-      isLoggedIn: false,
+      isLoggedIn: this.isUserLoggedIn,
     };
+  },
+  methods: {
+    logout(e) {
+      e.preventDefault();
+      localStorage.removeItem("name");
+      localStorage.removeItem("email");
+      localStorage.removeItem("_id");
+
+      this.$emit("resetHeader", false);
+    },
   },
   mounted() {
     console.log("mounted");

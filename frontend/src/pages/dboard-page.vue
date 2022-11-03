@@ -82,9 +82,12 @@ export default {
     },
   },
   mounted() {
-    if (!this.$store.state.userStore.user._id) {
+    const isUserLoggedIn = this.$store.state.userStore.user._id ? true : false;
+    this.$emit("resetHeader", isUserLoggedIn);
+    if (!isUserLoggedIn) {
       this.$router.push("/signUp");
     }
+
     this.$store.dispatch("updateFolderParent", "none");
   },
 };

@@ -85,7 +85,7 @@ const signIn = async (req, res, next) => {
         name: existingUser.name,
     }
 
-    return res.status(202).json({ user })
+    return res.status(200).json({ user })
 
 }
 

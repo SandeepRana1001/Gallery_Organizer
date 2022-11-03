@@ -130,7 +130,7 @@ export default {
         };
         const response = await axios(options);
 
-        if (response.status === 202) {
+        if (response.status === 200) {
           const data = response.data.user;
           this.$store.dispatch("updateUser", data);
           localStorage.setItem("email", data.email);

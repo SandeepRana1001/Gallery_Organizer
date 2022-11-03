@@ -4,7 +4,7 @@
     <div class="container-fluid">
       <div class="row mt-4">
         <div class="col-lg-12 col-md-12 col-sm-12 col-12">
-          <p class="text-center" v-if="length === 0">
+          <p class="text-center" v-if="!length">
             Please upload some image first
           </p>
           <ListView
@@ -66,10 +66,9 @@ export default {
     },
   },
   async mounted() {
-    console.log("Dboard Mounted");
     this.length =
-      this.$store.state.fileStore.file.length +
-      this.$store.state.fileStore.folder.length;
+      this.$store.state.fileStore.file.length > 0 ||
+      this.$store.state.fileStore.folder.length > 0;
 
     const current_dir = this.$store.state.fileStore.current_folder;
     const creator = this.$store.state.userStore.user._id;
