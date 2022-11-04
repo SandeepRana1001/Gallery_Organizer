@@ -22,12 +22,23 @@ const userStore = {
             state.user.email = body.email
 
         },
+        logout(state, body) {
+            localStorage.removeItem("_id");
+            localStorage.removeItem("name");
+            localStorage.removeItem("email");
+            state.user._id = null
+            state.user.name = null
+            state.user.email = null
+        }
 
     },
     actions: {
         updateUser(context, body) {
             context.commit('updateUser', body)
         },
+        logout(context, body) {
+            context.commit('logout', body)
+        }
 
     },
     modules: {

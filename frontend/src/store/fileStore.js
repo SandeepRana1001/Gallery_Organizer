@@ -87,7 +87,14 @@ const fileStore = {
                 })
             }
 
+        },
+        clearData(state, body) {
+            state.file = [];
+            state.folder = [];
+            state.toActionFiles = [];
+            state.toActionFolders = [];
         }
+
 
 
     },
@@ -113,6 +120,9 @@ const fileStore = {
         updateFolderAction(context, body) {
             context.commit('updateFolderAction', body)
         },
+        clearData(context, body) {
+            context.commit('clearData', body)
+        }
 
     },
     modules: {

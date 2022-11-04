@@ -70,11 +70,10 @@ export default {
   methods: {
     logout(e) {
       e.preventDefault();
-      localStorage.removeItem("name");
-      localStorage.removeItem("email");
-      localStorage.removeItem("_id");
-
-      this.$emit("resetHeader", false);
+      this.$emit("loggedOut", false);
+      this.$store.dispatch("clearData", "");
+      this.$store.dispatch("logout", "");
+      this.$router.push("/signIn");
     },
   },
   mounted() {

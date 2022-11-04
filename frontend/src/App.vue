@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <Header :isUserLoggedIn="isUserLoggedIn" @resetHeader="resetHeader" />
+    <Header
+      :isUserLoggedIn="isUserLoggedIn"
+      @resetHeader="resetHeader"
+      @loggedOut="isUserLoggedOut"
+    />
     <router-view
       :key="$route.path"
       @resetHeader="isHeaderRemounted"
@@ -55,10 +59,11 @@ export default {
     };
   },
   methods: {
+    isUserLoggedOut(childData) {
+      this.isUserLoggedIn = childData;
+    },
     resetHeader(childData) {
       this.isUserLoggedIn = childData;
-      this.$router.push("/signUp");
-      window.location.reload();
     },
     isHeaderRemounted(childData) {
       this.isUserLoggedIn = childData;
