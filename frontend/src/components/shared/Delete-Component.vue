@@ -93,21 +93,12 @@ export default {
     let data = this.$store.state.fileStore.toActionFiles;
     let folder_data = this.$store.state.fileStore.toActionFolders;
 
-    console.clear();
-    console.log("Files");
-
-    console.log(data);
-    console.log("Folders");
-
-    console.log(folder_data);
-
     // if (data.length > 1) {
     this.text = "Data Deleted Successfully";
     // } else {
     //   this.text = "File Deleted Successfully";
     // }
     var formdata = {};
-    console.log(formdata);
 
     const response = await axios.delete(
       `${process.env.VUE_APP_SERVER}upload/deleteData`,

@@ -61,15 +61,10 @@ export default {
       this.isList = childData === "list" ? true : false; // "Hello World"
     },
     isUIActionEnabled(childData) {
-      console.log("Working");
       this.$emit("isUIActionEnabled", childData);
     },
   },
-  async mounted() {
-    this.length =
-      this.$store.state.fileStore.file.length > 0 ||
-      this.$store.state.fileStore.folder.length > 0;
-
+  async beforeMount() {
     const current_dir = this.$store.state.fileStore.current_folder;
     const creator = this.$store.state.userStore.user._id;
     let response = await axios.get(
@@ -85,6 +80,11 @@ export default {
     this.folders = response.data.folders.filter((folder) => {
       return folder.parent === "none";
     });
+  },
+  updated() {
+    this.length =
+      this.$store.state.fileStore.file.length > 0 ||
+      this.$store.state.fileStore.folder.length > 0;
   },
 };
 </script>

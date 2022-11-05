@@ -97,7 +97,6 @@ export default {
       this.text = "Folder Deleted Successfully";
     }
     var formdata = {};
-    console.log(formdata);
 
     return;
 

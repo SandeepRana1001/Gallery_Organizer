@@ -80,10 +80,8 @@ export default {
     },
 
     async isRemountRequired(childData) {
-      console.log(this.$route.meta);
       const creator = this.$store.state.userStore.user._id;
       this.isLoading = true;
-      // console.clear();
       this.isList = 0;
       if (!childData.status) return;
       this.files = [];
@@ -117,8 +115,6 @@ export default {
         return folder._id === id;
       }).name;
 
-      console.log(this.folders);
-
       this.list = true;
       setTimeout(() => {
         this.isLoading = false;
@@ -130,15 +126,10 @@ export default {
       this.isList = childData === "list" ? true : false; // "Hello World"
     },
     isUIActionEnabled(childData) {
-      console.log("Working");
       this.$emit("isUIActionEnabled", childData);
     },
   },
-  async mounted() {
-    this.length =
-      this.$store.state.fileStore.file.length > 0 ||
-      this.$store.state.fileStore.folder.length > 0;
-
+  async beforeMount() {
     const id = window.location.href.split("/folder/")[1];
     const current_dir = id;
 
@@ -159,7 +150,6 @@ export default {
     this.name = response.data.folders.find((folder) => {
       return folder._id === id;
     }).name;
-    console.log(this.$store.state.fileStore.view);
     const type = this.$store.state.fileStore.view === "list" ? true : false;
     this.isList = type;
 
@@ -169,6 +159,11 @@ export default {
     //   current_dir,
     //   id
     // );
+  },
+  updated() {
+    this.length =
+      this.$store.state.fileStore.file.length > 0 ||
+      this.$store.state.fileStore.folder.length > 0;
   },
 };
 </script>

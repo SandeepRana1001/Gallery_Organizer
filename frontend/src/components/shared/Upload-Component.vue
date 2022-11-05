@@ -192,7 +192,6 @@ export default {
       this.links = [];
       this.files = [];
       $("#uploadModal").addClass("show").fadeIn(1000);
-      // console.clear();
       const files = event.target.files;
       let fileType = "";
       for (const i of Object.keys(files)) {
@@ -216,13 +215,10 @@ export default {
       $("#previewModal").addClass("show").fadeIn(1000);
     },
     async submit(event) {
-      // console.clear();
-
       event.preventDefault();
       const formData = new FormData();
 
       for (const i of Object.keys(this.files)) {
-        // console.log(this.files[i]);
         formData.append("images", this.files[i]);
       }
       formData.append("id", this.$store.state.userStore.user._id);
@@ -252,7 +248,6 @@ export default {
         }
       );
       if (response.status === 200) {
-        // console.clear();
         // response = await axios.get("http://localhost:5000/api/upload/");
         // this.$store.dispatch("updateFiles", response.data.data);
         this.closeModal("#previewModal", true);

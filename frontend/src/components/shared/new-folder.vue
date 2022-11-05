@@ -97,15 +97,12 @@ export default {
       }
 
       const parent = this.$store.state.fileStore.current_folder;
-      console.log(parent);
 
       const data = {
         name: this.folder_name,
         parent,
         creator: this.$store.state.userStore.user._id,
       };
-
-      console.log(data);
 
       const options = {
         url: process.env.VUE_APP_SERVER + "folder/newFolder",

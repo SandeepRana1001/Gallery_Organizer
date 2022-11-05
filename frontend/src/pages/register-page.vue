@@ -123,7 +123,6 @@ export default {
     },
     async submitForm(e) {
       e.preventDefault();
-      console.log();
       if (this.checkIfValid()) {
         // this.isDisabled = true;
         const formData = new FormData();

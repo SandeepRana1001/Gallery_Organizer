@@ -4,22 +4,28 @@
       <div class="row justify-content-center">
         <div class="col-lg-8 col-md-8 col-sm-12 col-12">
           <div class="text-center">
-            <button v-on:click="openModal('#newFolder')">
+            <button
+              v-if="!enableUIActions"
+              v-on:click="openModal('#newFolder')"
+            >
               <i class="fa-regular fa-folder"></i>
               <span> New Folder </span>
             </button>
-            <button v-on:click="openModal('#uploadModal')">
+            <button
+              v-if="!enableUIActions"
+              v-on:click="openModal('#uploadModal')"
+            >
               <i class="fa-solid fa-upload"></i>
               <span> Upload </span>
             </button>
-            <!-- <button v-if="enableUIActions">
+            <button v-if="enableUIActions">
               <i class="fa-solid fa-arrow-right-to-bracket"></i>
               <span> Move </span>
             </button>
             <button v-if="enableUIActions">
               <i class="fa-solid fa-copy"></i>
               <span> Copy </span>
-            </button> -->
+            </button>
             <button
               v-on:click="openModal('#deleteModal')"
               v-if="enableUIActions"
@@ -89,7 +95,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.$store.state.fileStore.toActionFiles.length);
     if (this.$store.state.fileStore.toActionFiles.length > 0) {
       this.setVisible(true);
     }

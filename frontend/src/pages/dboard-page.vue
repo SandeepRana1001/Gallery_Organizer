@@ -30,6 +30,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import Dboard from "@/components/dboard.vue";
 import $ from "jquery";
 import UIActions from "../components/master/UI-Actions.vue";
@@ -60,7 +61,6 @@ export default {
     },
     getErrors(childErrors) {
       this.err = childErrors;
-      console.log(this.err);
       $("#liveToast").addClass("show").fadeIn(2000);
     },
     checkIfModalTriggered(childData) {
@@ -77,9 +77,7 @@ export default {
         $("#deleteModal").addClass("show").fadeIn(1000);
       }, 2000);
     },
-    showUIAction(childData) {
-      console.log(childData);
-    },
+    showUIAction(childData) {},
   },
   mounted() {
     const isUserLoggedIn = this.$store.state.userStore.user._id ? true : false;

@@ -66,7 +66,6 @@ export default {
 
       this.$store.dispatch("updateView", { view: this.displayType });
       this.send();
-      console.log(this.$store.state.userStore.user._id);
     },
   },
   mounted() {

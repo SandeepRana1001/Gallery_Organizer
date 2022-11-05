@@ -38,7 +38,6 @@ export default {
   },
   methods: {},
   mounted() {
-    console.log("Mounted BreadCrumb");
     this.breadCrumb = this.$store.state.fileStore.bread_crumb;
     this.length = this.breadCrumb.length - 1;
   },

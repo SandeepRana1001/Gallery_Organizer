@@ -77,7 +77,6 @@ export default {
     },
   },
   mounted() {
-    console.log("mounted");
     if (this.$store.state.userStore.user._id) {
       this.isLoggedIn = true;
     }

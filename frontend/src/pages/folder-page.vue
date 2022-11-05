@@ -20,6 +20,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import folderBoard from "@/components/folder-board.vue";
 import $ from "jquery";
 import UIActions from "../components/master/UI-Actions.vue";
@@ -51,13 +52,11 @@ export default {
       this.isModalTriggered = childData;
     },
     reloadModal(childData) {
-      console.log("Reload Modal " + childData);
       this.isModalTriggered = childData;
 
       this.isModalTriggered = !childData;
     },
     checkIfModalAreClosed(childData) {
-      console.log(childData);
       this.isModalTriggered = !childData;
       this.isDeleteModal = false;
     },
@@ -68,12 +67,9 @@ export default {
         $("#deleteModal").addClass("show").fadeIn(1000);
       }, 2000);
     },
-    showUIAction(childData) {
-      console.log(childData);
-    },
+    showUIAction(childData) {},
   },
   mounted() {
-    console.log("mounted page folder");
     if (!this.$store.state.userStore.user._id) {
       this.$router.push("/signUp");
     }

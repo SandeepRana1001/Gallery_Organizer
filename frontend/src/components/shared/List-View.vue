@@ -135,7 +135,6 @@ export default {
       this.$emit("remountFolder", data);
     },
     redirection(id, name) {
-      // console.log(id);
       this.remountFolder(id);
       const data = {
         name,
