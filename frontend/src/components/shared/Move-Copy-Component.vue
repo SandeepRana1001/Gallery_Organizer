@@ -42,7 +42,9 @@
                         <option :selected="true" value="empty" hidden>
                           Select Destination Folder
                         </option>
-                        <option value="none">Dashboard</option>
+                        <option value="none" v-if="current_dir != 'none'">
+                          Dashboard
+                        </option>
                         <option
                           v-for="folder in folders"
                           :key="folder.id"
@@ -55,9 +57,17 @@
                       <div class="mt-3">
                         <button
                           class="btn theme full-width"
-                          v-on:click="submitForm"
+                          v-on:click="moveData"
+                          v-if="typeOfModal === 'MOVE'"
                         >
                           Move
+                        </button>
+                        <button
+                          class="btn theme full-width"
+                          v-on:click="copyData"
+                          v-if="typeOfModal === 'COPY'"
+                        >
+                          Copy
                         </button>
                       </div>
                     </div>
@@ -89,14 +99,16 @@ import Request from "@/globalFunctions/Request";
 export default {
   components: { ToastComponent },
 
-  name: "MoveComponent",
+  name: "MoveCopyComponent",
   data() {
     return {
+      current_dir: "",
       parent: "empty",
       success: false,
       text: "",
       folders: [],
       err: "",
+      typeOfModal: "",
     };
   },
   methods: {
@@ -107,13 +119,41 @@ export default {
       $(id).removeClass("show").fadeOut(1000);
       this.closingModal(val);
     },
-    async submitForm(e) {
-      e.preventDefault();
+    checkValidation() {
       if (this.parent.trim().length < 3 || this.parent.trim() === "empty") {
         this.err = "Please Select A Destination Folder";
         $("#liveToast").addClass("show").fadeIn(2000);
-        return;
+        return false;
       }
+
+      return true;
+    },
+    async copyData(e) {
+      e.preventDefault();
+      if (!this.checkValidation()) return;
+      const data = {
+        files: this.$store.state.fileStore.toActionFiles,
+        folders: this.$store.state.fileStore.toActionFolders,
+        parent: this.parent,
+      };
+      const response = await Request.sendRequest(
+        "post",
+        "upload/copyData",
+        data
+      );
+      if (response.status === 204) {
+        this.closeModal("#moveModal", true);
+        if (this.parent == "none") {
+          this.$router.push("/dashboard");
+        } else {
+          this.$router.push("/folder/" + this.parent);
+        }
+      }
+    },
+    async moveData(e) {
+      e.preventDefault();
+      if (!this.checkValidation()) return;
+
       const data = {
         files: this.$store.state.fileStore.toActionFiles,
         folders: this.$store.state.fileStore.toActionFolders,
@@ -136,6 +176,7 @@ export default {
     },
   },
   mounted() {
+    this.typeOfModal = this.$store.state.fileStore.move_or_copy;
     const dataFromStore = {
       files: this.$store.state.fileStore.file,
       folders: this.$store.state.fileStore.folder,
@@ -160,10 +201,10 @@ export default {
         }
       });
 
-      current_dir = temp.parent;
+      this.current_dir = temp.parent;
     }
     this.folders = this.$store.state.fileStore.folder.filter((folder) => {
-      return folder.id != current_dir;
+      return folder.id != this.current_dir;
     });
   },
 };

@@ -11,6 +11,9 @@ router.post('/uploadData', fileUpload.array('images', 10), fileController.upload
 
 router.put('/updateData', fileController.updateParent);
 
+router.post('/copyData', fileController.createCopy);
+
+
 router.delete('/deleteData', fileController.deleteImage)
 
 

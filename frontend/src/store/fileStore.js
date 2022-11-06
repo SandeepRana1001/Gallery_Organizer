@@ -14,7 +14,8 @@ const fileStore = {
         bread_crumb: [{
             name: 'Dashboard',
             id: 'none'
-        }]
+        }],
+        move_or_copy: ''
     },
     getters: {
 
@@ -88,6 +89,9 @@ const fileStore = {
             }
 
         },
+        updateMoveOrCopy(state, body) {
+            state.move_or_copy = body.toUpperCase()
+        },
         clearData(state, body) {
             state.file = [];
             state.folder = [];
@@ -119,6 +123,9 @@ const fileStore = {
         },
         updateFolderAction(context, body) {
             context.commit('updateFolderAction', body)
+        },
+        updateMoveOrCopy(context, body) {
+            context.commit('updateMoveOrCopy', body)
         },
         clearData(context, body) {
             context.commit('clearData', body)

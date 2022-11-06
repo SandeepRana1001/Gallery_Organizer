@@ -11,6 +11,13 @@ class Request {
                 "Content-Type": "application/json;charset=UTF-8",
             }
             options.data = data
+        } else if (type.toUpperCase() === 'POST') {
+            options.method = 'POST'
+            options.headers = {
+                Accept: "application/json",
+                "Content-Type": "application/json;charset=UTF-8",
+            }
+            options.data = data
         }
 
         const response = await axios(options);

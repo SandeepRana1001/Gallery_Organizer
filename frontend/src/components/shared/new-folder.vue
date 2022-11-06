@@ -115,6 +115,7 @@ export default {
       };
       const response = await axios(options);
       if (response.status === 201) {
+        this.folder_name = null;
         this.closeModal("#newFolder", true);
       }
     },

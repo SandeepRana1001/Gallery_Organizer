@@ -18,11 +18,11 @@
               <i class="fa-solid fa-upload"></i>
               <span> Upload </span>
             </button>
-            <button v-on:click="openModal('#moveModal')">
+            <button v-on:click="openModal('#moveModal', 'move')">
               <i class="fa-solid fa-arrow-right-to-bracket"></i>
               <span> Move </span>
             </button>
-            <button v-if="enableUIActions">
+            <button v-on:click="openModal('#moveModal', 'copy')">
               <i class="fa-solid fa-copy"></i>
               <span> Copy </span>
             </button>
@@ -81,13 +81,15 @@ export default {
     typeOfModal(type) {
       this.$emit("typeOfModal", type);
     },
-    openModal(id) {
+    openModal(id, type = "none") {
       $(id).addClass("show").fadeIn(1000);
       this.modalTriggered();
       if (id == "#deleteModal") this.typeOfModal("deleteModal");
       else if (id == "#uploadModal") this.typeOfModal("uploadModal");
-      else if (id == "#moveModal") this.typeOfModal("moveModal");
-      else if (id == "#deleteFolderModal") {
+      else if (id == "#moveModal") {
+        this.$store.dispatch("updateMoveOrCopy", type);
+        this.typeOfModal("moveModal");
+      } else if (id == "#deleteFolderModal") {
         this.typeOfModal("deleteFolderModal");
       }
     },

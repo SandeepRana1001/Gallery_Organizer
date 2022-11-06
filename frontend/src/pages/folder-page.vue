@@ -16,7 +16,7 @@
       <DeleteComponent @closeModal="checkIfModalAreClosed" />
     </div>
     <div class="moveModal" v-if="isMoveModal">
-      <MoveComponent
+      <MoveCopyComponent
         @closeModal="checkIfModalAreClosed"
         @receiveErrors="getErrors"
       />
@@ -32,11 +32,11 @@ import $ from "jquery";
 import UIActions from "../components/master/UI-Actions.vue";
 import UploadComponent from "../components/shared/Upload-Component.vue";
 import DeleteComponent from "../components/shared/Delete-Component.vue";
-import MoveComponent from "../components/shared/Move-Component.vue";
+import MoveCopyComponent from "../components/shared/Move-Copy-Component.vue";
 import NewFolder from "@/components/shared/new-folder.vue";
 export default {
   components: {
-    MoveComponent,
+    MoveCopyComponent,
     folderBoard,
     UploadComponent,
     DeleteComponent,

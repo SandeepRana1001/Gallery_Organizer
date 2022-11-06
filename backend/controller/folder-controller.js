@@ -2,32 +2,7 @@ const Folder = require('../model/folder-model')
 const HttpError = require('../middleware/http-error');
 const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
-
-const checkDuplicates = async (data) => {
-    let existingFolder = 1, i = 1, newName = data.name;
-
-    while (existingFolder != 0) {
-        let temp = await Folder.countDocuments({ name: newName, parent: data.parent })
-        if (temp > 0) {
-            const str = newName.split('(')
-            if (str.length > 1) {
-                const num = parseInt(str[1].replace(')', '')) + 1
-                newName = data.name + ' (' + num + ')'
-            } else {
-                newName = newName + ' (' + i + ')'
-            }
-        }
-
-        console.log(`${temp} is Temp for ${newName} `)
-        if (temp == 0) existingFolder = 0
-        i++
-    }
-
-
-    return newName
-
-
-}
+const checkDuplicates = require('../globalFunction/check-duplicate')
 
 const newFolder = async (req, res, next) => {
 
@@ -41,7 +16,7 @@ const newFolder = async (req, res, next) => {
 
 
     const data = { name, parent }
-    const newName = await checkDuplicates(data)
+    const newName = await checkDuplicates.checkDuplicates(data, 'folder')
 
     const newFolder = new Folder({
         name: newName,
@@ -62,7 +37,6 @@ const newFolder = async (req, res, next) => {
 }
 
 const deleteFolder = async (req, res, next) => {
-    console.log(res.body.folders)
 
     if (!res.body.folders) {
         return next('No value provided')
