@@ -18,7 +18,7 @@
               <i class="fa-solid fa-upload"></i>
               <span> Upload </span>
             </button>
-            <button v-if="enableUIActions">
+            <button v-on:click="openModal('#moveModal')">
               <i class="fa-solid fa-arrow-right-to-bracket"></i>
               <span> Move </span>
             </button>
@@ -86,6 +86,7 @@ export default {
       this.modalTriggered();
       if (id == "#deleteModal") this.typeOfModal("deleteModal");
       else if (id == "#uploadModal") this.typeOfModal("uploadModal");
+      else if (id == "#moveModal") this.typeOfModal("moveModal");
       else if (id == "#deleteFolderModal") {
         this.typeOfModal("deleteFolderModal");
       }

@@ -15,6 +15,12 @@
     <div class="deleteModal" v-if="isDeleteModal">
       <DeleteComponent @closeModal="checkIfModalAreClosed" />
     </div>
+    <div class="moveModal" v-if="isMoveModal">
+      <MoveComponent
+        @closeModal="checkIfModalAreClosed"
+        @receiveErrors="getErrors"
+      />
+    </div>
     <NewFolder @closeModal="checkIfModalAreClosed" />
   </section>
 </template>
@@ -26,9 +32,11 @@ import $ from "jquery";
 import UIActions from "../components/master/UI-Actions.vue";
 import UploadComponent from "../components/shared/Upload-Component.vue";
 import DeleteComponent from "../components/shared/Delete-Component.vue";
+import MoveComponent from "../components/shared/Move-Component.vue";
 import NewFolder from "@/components/shared/new-folder.vue";
 export default {
   components: {
+    MoveComponent,
     folderBoard,
     UploadComponent,
     DeleteComponent,
@@ -41,6 +49,8 @@ export default {
       isModalTriggered: false,
       isModalClose: true,
       isDeleteModal: false,
+      isMoveModal: false,
+      err: "",
       enableUIActions: false,
     };
   },
@@ -48,24 +58,30 @@ export default {
     isUIActionRemounted(childData) {
       this.enableUIActions = childData;
     },
+    getErrors(childErrors) {
+      this.err = childErrors;
+      $("#liveToast").addClass("show").fadeIn(2000);
+    },
     checkIfModalTriggered(childData) {
       this.isModalTriggered = childData;
-    },
-    reloadModal(childData) {
-      this.isModalTriggered = childData;
-
-      this.isModalTriggered = !childData;
     },
     checkIfModalAreClosed(childData) {
       this.isModalTriggered = !childData;
       this.isDeleteModal = false;
+      this.isMoveModal = false;
     },
     checkTypeOfModal(childData) {
-      if (childData === "deleteModal") this.isDeleteModal = true;
-
-      setTimeout(() => {
-        $("#deleteModal").addClass("show").fadeIn(1000);
-      }, 2000);
+      if (childData === "deleteModal") {
+        this.isDeleteModal = true;
+        setTimeout(() => {
+          $("#deleteModal").addClass("show").fadeIn(1000);
+        }, 2000);
+      } else if (childData === "moveModal") {
+        this.isMoveModal = true;
+        setTimeout(() => {
+          $("#moveModal").addClass("show").fadeIn(1000);
+        }, 2000);
+      }
     },
     showUIAction(childData) {},
   },
@@ -76,6 +92,8 @@ export default {
 
     const id = window.location.href.split("/folder/")[1];
     this.$store.dispatch("updateFolderParent", id);
+    this.$store.dispatch("updateFolderAction", []);
+    this.$store.dispatch("updateToAction", []);
   },
 };
 </script>

@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors')
 const cookieparser = require('cookie-parser');
-const uploadRoutes = require('./routes/upload-routes');
+const fileRoutes = require('./routes/file-routes');
 const userRoutes = require('./routes/user-routes');
 const folderRoutes = require('./routes/folder-routes');
 
@@ -26,7 +26,7 @@ app.use(cookieparser());
 app.use(bodyParser.json())
 app.use('/images/gallery', express.static(path.join('images', 'gallery')))
 
-app.use('/api/upload', uploadRoutes);
+app.use('/api/upload', fileRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/folder', folderRoutes);
 

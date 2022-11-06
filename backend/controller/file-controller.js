@@ -53,7 +53,7 @@ const deleteImage = async (req, res, next) => {
 
     const files = req.body.files
     const folders = req.body.folders
-    let existingImage, existingFolder;
+    let existingFile, existingFolder;
 
     let imagePath;
 
@@ -68,9 +68,9 @@ const deleteImage = async (req, res, next) => {
     if (files.length > 0) {
 
 
-        files.forEach(async (imageId) => {
+        files.forEach(async (fileId) => {
             try {
-                existingImage = await Gallery.findOne({ _id: imageId })
+                existingFile = await Gallery.findOne({ _id: fileId })
             } catch (err) {
                 // const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
                 return next({
@@ -78,17 +78,17 @@ const deleteImage = async (req, res, next) => {
                     status: 500
                 })
             }
-            if (!existingImage) {
+            if (!existingFile) {
                 const error = new HttpError('Something went wrong. Cannot Remove Item', 500)
                 return next(error)
             }
             imagePath = ''
-            imagePath = 'images/gallery/' + existingImage.backend_name
+            imagePath = 'images/gallery/' + existingFile.backend_name
 
             try {
                 const sess = await mongoose.startSession()
                 sess.startTransaction()
-                await existingImage.remove({ session: sess })
+                await existingFile.remove({ session: sess })
                 await sess.commitTransaction()
 
             } catch (err) {
@@ -126,7 +126,7 @@ const deleteImage = async (req, res, next) => {
             /* Remove images inside the folder */
 
             try {
-                existingImage = await Gallery.find({ parent: folderId })
+                existingFile = await Gallery.find({ parent: folderId })
             } catch (err) {
                 // const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
                 return next({
@@ -136,16 +136,16 @@ const deleteImage = async (req, res, next) => {
             }
 
 
-            existingImage.forEach(async (existingImage) => {
+            existingFile.forEach(async (existingFile) => {
 
 
                 imagePath = ''
-                imagePath = 'images/gallery/' + existingImage.backend_name
+                imagePath = 'images/gallery/' + existingFile.backend_name
 
                 try {
                     const sess = await mongoose.startSession()
                     sess.startTransaction()
-                    await existingImage.remove({ session: sess })
+                    await existingFile.remove({ session: sess })
                     await sess.commitTransaction()
 
                 } catch (err) {
@@ -166,11 +166,91 @@ const deleteImage = async (req, res, next) => {
     return res.status(200).json({ success: 'Removed' })
 }
 
+const updateParent = async (req, res, next) => {
+
+    const files = req.body.files
+    const folders = req.body.folders
+    const parent = req.body.parent
+    let existingFile, existingFolder;
+
+
+    if (files.length === 0 && folders.length === 0) {
+        return next({
+            msg: 'Invalid Input Passsed',
+            status: 422
+        })
+    }
+
+    if (files.length > 0) {
+
+
+        files.forEach(async (fileId) => {
+            try {
+                existingFile = await Gallery.findOne({ _id: fileId })
+            } catch (err) {
+                // const error = new HttpError('Something went wrong. Cannot Remove Item' + err, 500)
+                return next({
+                    msg: 'Something went wrong',
+                    status: 500
+                })
+            }
+            if (!existingFile) {
+                const error = new HttpError('Something went wrong. Cannot Find File', 500)
+                return next(error)
+            }
+
+            existingFile.parent = parent;
+
+            try {
+                await existingFile.save()
+
+            } catch (err) {
+                const error = new HttpError('Something went wrong. Cannot Save File' + err, 500)
+                return next(error)
+            }
+
+
+        })
+    }
+
+    if (folders.length > 0) {
+
+        folders.forEach(async (folderId) => {
+            try {
+                existingFolder = await Folder.findOne({ _id: folderId })
+            } catch (err) {
+                return next(new HttpError(err, 500))
+            }
+
+            if (!existingFolder) {
+                const error = new HttpError('Something went wrong. Cannot Find  Folder', 500)
+                return next(error)
+            }
+
+
+            existingFolder.parent = parent;
+
+            try {
+                await existingFolder.save()
+
+            } catch (err) {
+                const error = new HttpError('Something went wrong. Cannot Save Folder' + err, 500)
+                return next(error)
+            }
+
+
+        })
+    }
+
+
+    return res.status(204).json({ success: 'Successfully Updated' })
+}
 
 
 
 exports.uploadFile = uploadFile
 exports.getData = getData
 exports.deleteImage = deleteImage
+exports.updateParent = updateParent
 
 

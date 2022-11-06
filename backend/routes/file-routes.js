@@ -7,8 +7,9 @@ const router = express.Router()
 
 router.get('/:id', fileController.getData)
 
-
 router.post('/uploadData', fileUpload.array('images', 10), fileController.uploadFile)
+
+router.put('/updateData', fileController.updateParent);
 
 router.delete('/deleteData', fileController.deleteImage)
 

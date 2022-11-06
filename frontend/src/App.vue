@@ -27,6 +27,9 @@ body {
   background-color: blueviolet;
   color: white;
 }
+.full-width {
+  width: 100%;
+}
 </style>
 
 <script>
