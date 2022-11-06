@@ -296,7 +296,7 @@ const createCopy = async (req, res, next) => {
                 backend_name: backend_name,
                 displayName,
                 parent,
-                url: url + newImagepath,
+                url: url + '/' + newImagepath,
                 creator: existingFile.creator
             })
 

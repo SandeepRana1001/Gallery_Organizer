@@ -85,6 +85,7 @@ export default {
     this.length =
       this.$store.state.fileStore.file.length > 0 ||
       this.$store.state.fileStore.folder.length > 0;
+    console.log(this.length);
   },
 };
 </script>

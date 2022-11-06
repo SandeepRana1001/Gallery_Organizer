@@ -18,11 +18,18 @@
               <i class="fa-solid fa-upload"></i>
               <span> Upload </span>
             </button>
-            <button v-on:click="openModal('#moveModal', 'move')">
+
+            <button
+              v-on:click="openModal('#moveModal', 'move')"
+              v-if="enableUIActions"
+            >
               <i class="fa-solid fa-arrow-right-to-bracket"></i>
               <span> Move </span>
             </button>
-            <button v-on:click="openModal('#moveModal', 'copy')">
+            <button
+              v-on:click="openModal('#moveModal', 'copy')"
+              v-if="enableUIActions"
+            >
               <i class="fa-solid fa-copy"></i>
               <span> Copy </span>
             </button>
